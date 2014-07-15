@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.infinispan</groupId>
+    <artifactId>infinispan-lucene-parent</artifactId>
+    <name>Parent pom for the Lucene integration modules</name>
+    <packaging>pom</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+        <version.lucene>4.8.1</version.lucene>
+        <version.infinispan>7.0.0-SNAPSHOT</version.infinispan>
+        <version.c3p0>0.9.5-pre8</version.c3p0>
+        <version.h2.driver>1.3.173</version.h2.driver>
+        <version.jboss.logging.processor>1.1.0.Final</version.jboss.logging.processor>
+        <version.testng>6.8.8</version.testng>
+        <version.net.jcip.annotations>1.0</version.net.jcip.annotations>
+        <version.mockito>1.9.5</version.mockito>
+        <version.jbossjta>4.17.13.Final</version.jbossjta>
+        <defaultTestGroup>functional,unit,arquillian</defaultTestGroup>
+        <infinispan.test.parallel.threads>1</infinispan.test.parallel.threads>
+    </properties>
+
+    <modules>
+        <module>lucene-directory</module>
+    </modules>
+
+
+</project>
