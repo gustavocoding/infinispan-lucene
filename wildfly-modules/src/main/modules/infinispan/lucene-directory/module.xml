@@ -4,11 +4,11 @@
         <resource-root path="infinispan-lucene-directory-${project.version}.jar" />
     </resources>
     <dependencies>
-        <module name="org.apache.lucene" slot="${version.lucene}" />
-        <module name="org.infinispan" slot="${version.infinispan}" />
-        <module name="org.infinispan.commons" slot="${version.infinispan}" />
+        <module name="org.apache.lucene" slot="${version.lucene}" export="true"/>
+        <module name="org.infinispan" slot="${slot.infinispan}" />
+        <module name="org.infinispan.commons" slot="${slot.infinispan}" />
         <module name="org.jboss.logging" />
-        <module name="javax.api" />
         <module name="javax.transaction.api" />
+        <module name="javax.api" />
     </dependencies>
 </module>

@@ -6,6 +6,7 @@
         <resource-root path="lucene-queryparser-${version.lucene}.jar" />
         <resource-root path="lucene-queries-${version.lucene}.jar" />
         <resource-root path="lucene-facet-${version.lucene}.jar" />
+        <resource-root path="lucene-grouping-${version.lucene}.jar" />
         <resource-root path="lucene-analyzers-common-${version.lucene}.jar" />
     </resources>
     <dependencies>
