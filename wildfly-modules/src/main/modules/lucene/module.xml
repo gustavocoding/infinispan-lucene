@@ -3,11 +3,11 @@
 <module xmlns="urn:jboss:module:1.1" name="org.apache.lucene" slot="${version.lucene}">
     <resources>
         <resource-root path="lucene-core-${version.lucene}.jar" />
+        <resource-root path="lucene-analyzers-common-${version.lucene}.jar" />
         <resource-root path="lucene-queryparser-${version.lucene}.jar" />
         <resource-root path="lucene-queries-${version.lucene}.jar" />
         <resource-root path="lucene-facet-${version.lucene}.jar" />
         <resource-root path="lucene-grouping-${version.lucene}.jar" />
-        <resource-root path="lucene-analyzers-common-${version.lucene}.jar" />
     </resources>
     <dependencies>
         <module name="javax.api" optional="true" />

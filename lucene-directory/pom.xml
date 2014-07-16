@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <version>${version.infinispan}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
             <version>${version.lucene}</version>
@@ -27,16 +32,30 @@
             <version>${version.lucene}</version>
         </dependency>
         <dependency>
+            <groupId>net.jcip</groupId>
+            <artifactId>jcip-annotations</artifactId>
+            <version>${version.net.jcip.annotations}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging-processor</artifactId>
             <version>${version.jboss.logging.processor}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-cachestore-jdbc</artifactId>
+            <version>${version.infinispan}</version>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>org.jboss.jbossts.jta</groupId>
             <artifactId>narayana-jta</artifactId>
-            <scope>test</scope>
             <version>${version.jbossjta}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -48,24 +67,8 @@
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-core</artifactId>
             <version>${version.infinispan}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.jcip</groupId>
-            <artifactId>jcip-annotations</artifactId>
-            <version>${version.net.jcip.annotations}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-core</artifactId>
-            <version>${version.infinispan}</version>
             <type>test-jar</type>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-cachestore-jdbc</artifactId>
-            <version>${version.infinispan}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.infinispan</groupId>
@@ -83,13 +86,19 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
             <version>${version.h2.driver}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${version.testng}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -99,56 +108,14 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.17</version>
-                <executions>
-                    <execution>
-                        <id>default-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <parallel>tests</parallel>
-                            <threadCount>1</threadCount>
-                            <forkCount>1</forkCount>
-                            <reuseForks>true</reuseForks>
-                            <groups>functional,unit,arquillian</groups>
-                            <systemPropertyVariables>
-                                <log4j.configuration>custom-lucene-log4j.xml</log4j.configuration>
-                                <infinispan.test.jgroups.protocol>tcp</infinispan.test.jgroups.protocol>
-                                <jgroups.bind_addr>127.0.0.1</jgroups.bind_addr>
-                                <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
-                                <infinispan.unsafe.allow_jdk8_chm>true</infinispan.unsafe.allow_jdk8_chm>
-                            </systemPropertyVariables>
-                            <excludedGroups>unstable,stress,unstable_xsite</excludedGroups>
-                            <trimStackTrace>false</trimStackTrace>
-                            <properties>
-                                <property>
-                                    <name>usedefaultlisteners</name>
-                                    <value>false</value>
-                                </property>
-                                <property>
-                                    <name>listener</name>
-                                    <value>org.infinispan.test.fwk.UnitTestTestNGListener</value>
-                                </property>
-                            </properties>
-                            <argLine>-Xmx1024m -XX:MaxPermSize=256m -Dsun.nio.ch.bugLevel</argLine>
-                        </configuration>
-                    </execution>
-                </executions>
                 <configuration>
                     <parallel>tests</parallel>
-                    <threadCount>15</threadCount>
+                    <threadCount>${infinispan.test.parallel.threads}</threadCount>
                     <forkCount>1</forkCount>
                     <reuseForks>true</reuseForks>
                     <groups>functional,unit,arquillian</groups>
                     <systemPropertyVariables>
                         <log4j.configuration>custom-lucene-log4j.xml</log4j.configuration>
-                        <infinispan.test.jgroups.protocol>tcp</infinispan.test.jgroups.protocol>
-                        <jgroups.bind_addr>127.0.0.1</jgroups.bind_addr>
-                        <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
-                        <infinispan.unsafe.allow_jdk8_chm>true</infinispan.unsafe.allow_jdk8_chm>
-                        <build.directory>/home/gfernandes/code/infinispan/upstream/lucene/lucene-directory/target</build.directory>
-                        <infinispan.module-name>infinispan-lucene-directory</infinispan.module-name>
                     </systemPropertyVariables>
                     <excludedGroups>unstable,stress,unstable_xsite</excludedGroups>
                     <trimStackTrace>false</trimStackTrace>
@@ -165,32 +132,34 @@
                     <argLine>-Xmx1024m -XX:MaxPermSize=256m -Dsun.nio.ch.bugLevel</argLine>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <executions>
                     <execution>
                         <id>build-test-jar</id>
                         <goals>
                             <goal>test-jar</goal>
                         </goals>
+                        <configuration>
+                            <excludes>
+                                <excludes>**/jbossts-properties.xml</excludes>
+                                <exclude>**/log4j.xml</exclude>
+                                <exclude>**/*.bat</exclude>
+                                <exclude>**/*.sh</exclude>
+                                <exclude>**/*.txt</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -206,6 +175,23 @@
                     </instructions>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <inherited>true</inherited>
+            </plugin>
+
+
         </plugins>
     </build>
 
